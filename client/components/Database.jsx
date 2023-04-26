@@ -10,6 +10,15 @@ class Database extends Component {
 }
 
   render() {
+    const stories = this.props.dbstories.map((el, index) => {
+      return (
+        <div>
+          <p>{`Story #${index + 1}`}</p>
+          {JSON.stringify(el)}
+        </div>
+      )
+    });
+
     return(
       <div>
         <form className="flex-container">
@@ -19,7 +28,9 @@ class Database extends Component {
           <button type="button" className="form-button" id="clearField" onClick={() => this.clearField()}>Clear</button>
         </form>
         <div className="flex-container"> 
-          {JSON.stringify(this.props.dbstories)}
+          <div>
+            {stories}
+          </div>
           {/* {this.props.dbimages} */}
         </div>
       </div>

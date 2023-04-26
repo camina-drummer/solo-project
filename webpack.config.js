@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, "./build"),
     // actual javascript tag that will be in our script tag, where bundling is directed and is loaded to browser
     filename: "bundle.js",
+    // publicPath: "/" // doesn't seem to do anything
   },
   mode: "development",
   module: {
@@ -37,7 +38,7 @@ module.exports = {
     ]
   },
   devServer: {
-    // historyApiFallback: true,
+    // historyApiFallback: true, // doesn't seem to do anything
     // anything thats not available in the output, used for serving up static assets
     // static: {
     //   publicPath: 'build',

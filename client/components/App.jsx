@@ -29,7 +29,6 @@ class App extends Component {
   }
 
   handleClickCGPT() {
-    // fetch requests not being proxied correctly for non-root /api/* endpoints
     fetch('/api/cgpt', {
       method: "POST",
       headers: {
@@ -52,7 +51,6 @@ class App extends Component {
   }
 
   handleClickSQL() {
-    // fetch requests not being proxied correctly for non-root /api/* endpoints
     fetch('/api/sql', {
       method: "POST",
       headers: {
