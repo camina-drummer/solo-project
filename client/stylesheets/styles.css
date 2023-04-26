@@ -109,3 +109,61 @@ h1 {
 .story-container {
     width: 80vw;
 }
+
+#loginForm,
+#signupForm {
+    display: flex;
+    flex-direction: column;
+    border: 3px solid #81756c;
+    padding: 15px 15px 0px 15px;
+}
+
+.usernameField,
+.passwordField {
+    margin: 10px 0px;
+}
+
+.loginbtn {
+    height: 25px;
+    width: 100px;
+    background-color: #b4b4b4;
+    color: white;
+    border: 1px solid rgb(102, 101, 101);
+}
+
+#loginDiv,
+#signupDiv {
+    height: 70vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.linkBtn {
+    border: none;
+    background: none;
+    font-size: 14px;
+}
+.linkBtn:hover {
+    text-decoration: underline;
+    color:#655b55;
+}
+
+.linkTxt {
+    font-size: 14px;
+    color:#655b55;
+}
+
+.formHeader {
+    display: flex;
+    justify-content: center;
+    padding: 0px;
+    margin: 15px 0px 30px 0px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.linkContainer {
+    margin-top: 20px;
+}

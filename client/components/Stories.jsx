@@ -24,6 +24,13 @@ class Stories extends Component {
         document.getElementById('mainField').value = randomStory;
     }
 
+    onEnter(event) {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          this.props.submitquery();
+        }
+      }
+
     clearField() {
         document.getElementById('mainField').value = "";
     }
@@ -87,7 +94,7 @@ class Stories extends Component {
                 </div>
                 <form className="flex-container">
                     <label htmlFor="mainField">Make me a back story for a: </label>
-                    <input type="text" id="mainField" name="mainField"/>
+                    <input type="text" id="mainField" name="mainField" onKeyDown={(e) => this.onEnter(e)}/>
                     <button type="button" className="form-button" id="submitMain" onClick={() => this.props.submitquery()}>Submit Query</button>
                     <button type="button" className="form-button" id="randomizeMain" onClick={() => this.randomizeStory()}>Randomize</button>
                     <button type="button" className="form-button" id="clearFieldMain" onClick={() => this.clearField()}>Clear</button>

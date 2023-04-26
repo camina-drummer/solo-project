@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Stories from './Stories.jsx';
 import Images from './Images.jsx';
 import Database from './Database.jsx';
+import Login from './Login.jsx';
+import Signup from './Signup.jsx';
 
 
 class App extends Component {
@@ -18,11 +20,15 @@ class App extends Component {
       },
       dbstories: [],
       dbimages: [],
+      loggedIn: false,
+      signupPage: false,
     };
     
 
     this.handleClickCGPT = this.handleClickCGPT.bind(this);
     this.handleClickSQL = this.handleClickSQL.bind(this);
+    this.loginFn = this.loginFn.bind(this);
+    this.signupPage = this.signupPage.bind(this);
   }
 
   componentDidMount() {
@@ -73,8 +79,30 @@ class App extends Component {
       });
   }
 
+  loginFn() {
+    this.setState({ loggedIn: true });
+  }
+
+  signupPage() {
+    this.setState({ signupPage: !this.state.signupPage });
+  }
 
   render() {
+    if (this.state.signupPage) {
+      return (
+        <div id="signupDiv">
+          <Signup loginFn={this.loginFn} signupPage={this.signupPage} />
+        </div>
+      )
+    }
+
+    if (!this.state.loggedIn) {
+      return (
+        <div id="loginDiv">
+          <Login signupPage={this.signupPage} loginFn={this.loginFn} />
+        </div>
+      )
+    }
 
     return (
       <div>

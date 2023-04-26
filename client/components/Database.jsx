@@ -7,7 +7,14 @@ class Database extends Component {
 
   clearField() {
     document.getElementById('dbField').value = "";
-}
+  }
+
+  onEnter(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      this.props.submitquery();
+    }
+  }
 
   render() {
     const stories = this.props.dbstories.map((el, index) => {
@@ -23,7 +30,7 @@ class Database extends Component {
       <div>
         <form className="flex-container">
           <label htmlFor="dbField">Show me the saved entries for: </label>
-          <input type="text" id="dbField" name="dbField"/>
+          <input type="text" id="dbField" name="dbField" onKeyDown={(e) => this.onEnter(e)}/>
           <button type="button" className="form-button" id="test" onClick={() => this.props.submitquery()}>Submit Query</button>
           <button type="button" className="form-button" id="clearField" onClick={() => this.clearField()}>Clear</button>
         </form>
