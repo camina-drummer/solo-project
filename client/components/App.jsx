@@ -11,6 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       stories: [ { message: { content: "Please submit a query." } } ],
+      images: [],
       traits: {
         gender: ["male", "female", "trans male", "trans female", "non-binary", "gender neutral"],
         alignment: ["lawful good", "lawful neutral", "lawful evil", "neutral good", "true neutral", "neutral evil", "chaotic good", "chaotic neutral", "chaotic evil"],
@@ -124,8 +125,10 @@ class App extends Component {
     })
     .then(data => data.json())
     .then(parsed => {
-      // console.log(parsed);
-      this.setState(parsed);
+      const stories = [ { message: { content: "Please submit a query." } } ];
+      const dbstories = ["Please submit a query."];
+      const newState = Object.assign(parsed, { stories, dbstories });
+      this.setState(newState);
     })
     .catch(err => {
       console.log(err);

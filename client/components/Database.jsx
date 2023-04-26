@@ -20,8 +20,8 @@ class Database extends Component {
     const stories = this.props.dbstories.map((el, index) => {
       return (
         <div>
-          <p>{`Story #${index + 1}`}</p>
-          {JSON.stringify(el)}
+          <div className="flex-container dbStoryTitle">{`Entry #${index + 1}`}</div>
+          <div className="flex-container dbStoryText">{JSON.stringify(el)}</div>
         </div>
       )
     });

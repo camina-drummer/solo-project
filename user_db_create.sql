@@ -11,9 +11,9 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 -- Reset all tables
-DROP TABLE public.users
-DROP TABLE public.stories
-DROP TABLE public.images
+DROP TABLE IF EXISTS public.users CASCADE
+DROP TABLE IF EXISTS public.stories CASCADE
+DROP TABLE IF EXISTS public.images CASCADE
 -- DROP TABLE public.story_traits
 
 -- Create tables, turning off OIDS which are auto-generated IDs that are non-standard and rarely used

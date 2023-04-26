@@ -1,6 +1,9 @@
 const User = require('../models/userModelMongo.js');
 const db = require('../models/userModel.js')
 
+const SALT_WORK_FACTOR = 10;
+const bcrypt = require('bcryptjs');
+
 const userController = {};
 
 /**
@@ -22,28 +25,41 @@ userController.getAllUsers = (req, res, next) => {
 /**
  * createUser - create and save a new User into the database.
  */
+
+// bcrypt.hash(myPlaintextPassword, saltRounds).then(function(hash) {
+//   // Store hash in your password DB.
+// });
+// // Load hash from your password DB.
+// bcrypt.compare(myPlaintextPassword, hash).then(function(result) {
+//   // result == true
+// });
+
+
 userController.createUser = async (req, res, next) => {
 	try {
 		const found = await User.findOne({ username: req.body.username });
 		if (!found) {
-			const newUser = await User.create(req.body);
-			console.log("Created user:", newUser);
-			if (newUser._id) {
-				const { username, password } = req.body;
-				const ssid = newUser._id.toString();
-				res.locals.ssid = ssid;
-
-				const text = "INSERT INTO users (username, password, ssid) VALUES ($1, $2, $3)"
-				const values = [username, password, ssid];
-				db.query(text, values)
-        .then((data) => {
-						console.log("SQL result", data)
-            return next();
-        })
-				.catch(err => next({log: err, message: "Something went wrong."}))
-			} else {
-				return next({log: newUser, message: "An error occurred."});
-			}
+			const { username, password } = req.body;
+			bcrypt.hash(password, SALT_WORK_FACTOR)
+				.then(async function(hash) {
+					// Store hash in your password DB.
+					const newUser = await User.create({ username: username, password: hash });
+					console.log("Created user:", newUser);
+					if (newUser._id) {
+						const ssid = newUser._id.toString();
+						res.locals.ssid = ssid;
+						const text = "INSERT INTO users (username, password, ssid) VALUES ($1, $2, $3)"
+						const values = [username, hash, ssid];
+						db.query(text, values)
+						.then((data) => {
+								console.log("SQL result", data)
+								return next();
+						})
+						.catch(err => next({log: err, message: "Something went wrong."}))
+					} else {
+						return next({log: newUser, message: "An error occurred."});
+					}
+				});			
 		} else {
 			return next({ log: `User already exists:\n${found}`, message: 'User already exists'});
 		}
@@ -64,13 +80,16 @@ userController.verifyUser = async (req, res, next) => {
 		res.locals.verified = false;
 		if (!foundUser) return next({ log: 'User not found.', message: 'Could not verify username or password.'});
 		
-		if (req.body.password === foundUser.password) {
-			res.locals.verified = true;
-			res.locals.ssid = foundUser._id.toString();
-			return next();
-		} else {
-			return next({ log: 'User password incorrect.', message: 'Could not verify username or password.'});
-		}
+		bcrypt.compare(req.body.password, foundUser.password)
+		.then(function(result) {
+			if (result) {
+				res.locals.verified = true;
+				res.locals.ssid = foundUser._id.toString();
+				return next();
+			} else {
+				return next({ log: 'User password incorrect.', message: 'Could not verify username or password.'});
+			}
+		});
 	} catch (error) {
 		return next({ log: error, message: 'Could not verify username or password.' })
 	}
