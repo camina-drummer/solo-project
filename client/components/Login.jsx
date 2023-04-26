@@ -11,15 +11,6 @@ class Login extends Component {
     document.getElementById('passwordLI').value = "";
   }
 
-  loginReq() {
-    fetch('/login')
-    .then(data => data.json())
-    .then(parsed => {
-      console.log(parsed);
-    })
-    .catch(err => console.log(err));
-  }
-
   render() {
   
     return (
@@ -27,11 +18,11 @@ class Login extends Component {
         <form id="loginForm">
           <p className="formHeader">Login</p>
           <label htmlFor="usernameField">Username: </label>
-          <input type="text" class="usernameField" id="usernameLI" name="usernameField"></input>
+          <input type="text" className="usernameField" id="usernameLI" name="usernameField"></input>
           <label htmlFor="passwordField">Password: </label>
-          <input type="text" class="passwordField" id="passwordLI" name="passwordField"></input>
+          <input type="text" className="passwordField" id="passwordLI" name="passwordField"></input>
           <div className="flex-container">
-            <button className="loginbtn" type="button" onClick={this.loginReq}>Login</button>
+            <button className="loginbtn" type="button" onClick={this.props.loginReq}>Login</button>
             <button className="loginbtn" type="button" onClick={this.clearFields}>Clear</button>
           </div>
           <div className="flex-container linkContainer">

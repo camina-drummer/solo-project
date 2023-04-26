@@ -20,19 +20,25 @@ class App extends Component {
       },
       dbstories: [],
       dbimages: [],
-      loggedIn: false,
+      loggedIn: null,
       signupPage: false,
     };
-    
-
+  
     this.handleClickCGPT = this.handleClickCGPT.bind(this);
     this.handleClickSQL = this.handleClickSQL.bind(this);
     this.loginFn = this.loginFn.bind(this);
     this.signupPage = this.signupPage.bind(this);
     this.logoutFn = this.logoutFn.bind(this);
+    this.loginReq = this.loginReq.bind(this);
+    this.guestLogin = this.guestLogin.bind(this);
   }
 
   componentDidMount() {
+    fetch('/checkloginstatus')
+    .then(data => data.json())
+    .then(parsed => this.setState(parsed))
+    .then(() => {})
+    .catch(err => console.log(err));
   }
 
   handleClickCGPT() {
@@ -80,12 +86,74 @@ class App extends Component {
       });
   }
 
+  // Probably don't need
   loginFn() {
     this.setState({ loggedIn: true });
   }
 
+  loginReq() {
+    fetch('/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: document.getElementById('usernameLI').value,
+        password: document.getElementById('passwordLI').value
+      })
+    })
+    .then(data => data.json())
+    .then(parsed => {
+      if (Object.hasOwn(parsed, "loggedIn")) {
+        window.alert("Login succesful!");
+        this.setState(parsed);
+      }
+      else {
+        window.alert("Error logging in!");
+      }
+    })
+    .catch(err => console.log(err));
+  }
+
   logoutFn() {
-    this.setState({ loggedIn: false });
+    fetch('/logout', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then(data => data.json())
+    .then(parsed => {
+      // console.log(parsed);
+      this.setState(parsed);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
+
+  guestLogin() {
+    fetch('/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: "guest",
+        password: "guest"
+      })
+    })
+    .then(data => data.json())
+    .then(parsed => {
+      if (Object.hasOwn(parsed, "loggedIn")) {
+        window.alert("Logging in as guest.")
+        this.setState(parsed);
+      }
+      else {
+        window.alert("Error logging in as guest.")
+      };
+    })
+    .catch(err => console.log(err));
   }
 
   signupPage() {
@@ -93,7 +161,7 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.signupPage) {
+    if (this.state.signupPage === true) {
       return (
         <div id="signupDiv">
           <Signup loginFn={this.loginFn} signupPage={this.signupPage} />
@@ -101,28 +169,30 @@ class App extends Component {
       )
     }
 
-    if (!this.state.loggedIn) {
+    if (this.state.loggedIn === false) {
       return (
         <div>
-          <button onClick={this.loginFn} className="loginbtn" id="guestBtn" type="button">Guest Mode</button>
+          <button onClick={this.guestLogin} className="loginbtn" id="guestBtn" type="button">Guest Mode</button>
           <div id="loginDiv">
-            <Login signupPage={this.signupPage} loginFn={this.loginFn} />
+            <Login signupPage={this.signupPage} loginReq={this.loginReq} />
           </div>
         </div>
       )
     }
 
-    return (
-      <div>
-        <button onClick={this.logoutFn} className="loginbtn" id="logoutBtn" type="button">Logout</button>
-        <Images />       
-        <Stories traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
-        <br></br>
-        <br></br>
-        <br></br>
-        <Database dbstories={this.state.dbstories} dbimages={this.state.dbimages} submitquery={this.handleClickSQL}/>
-      </div>
-    );
+    if (this.state.loggedIn === true) {  
+      return (
+        <div>
+          <button onClick={this.logoutFn} className="loginbtn" id="logoutBtn" type="button">Logout</button>
+          {/* <Images />     */}
+          <Stories traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
+          <br></br>
+          <br></br>
+          <br></br>
+          <Database dbstories={this.state.dbstories} dbimages={this.state.dbimages} submitquery={this.handleClickSQL}/>
+        </div>
+      )
+    }
   }
 }
 

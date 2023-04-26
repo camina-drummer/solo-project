@@ -26,10 +26,10 @@ class Stories extends Component {
 
     onEnter(event) {
         if (event.keyCode === 13) {
-          event.preventDefault();
-          this.props.submitquery();
+            event.preventDefault();
+            this.props.submitquery();
         }
-      }
+    }
 
     clearField() {
         document.getElementById('mainField').value = "";

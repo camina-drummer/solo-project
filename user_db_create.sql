@@ -20,7 +20,7 @@ DROP TABLE public.images
 CREATE TABLE public.users (
 	"_id" serial NOT NULL,
 	"username" varchar NOT NULL,
-    "password" varchar NOT NULL,
+  "password" varchar NOT NULL,
 	"ssid" varchar NOT NULL,
 	CONSTRAINT "users_pk" PRIMARY KEY ("_id")
 ) WITH (

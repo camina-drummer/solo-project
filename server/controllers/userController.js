@@ -1,4 +1,5 @@
 const User = require('../models/userModelMongo.js');
+const db = require('../models/userModel.js')
 
 const userController = {};
 
@@ -11,10 +12,7 @@ userController.getAllUsers = (req, res, next) => {
 		// if a database error occurs, call next with the error message passed in
 		// for the express global error handler to catch
 		if (err)
-			return next(
-				'Error in userController.getAllUsers: ' + JSON.stringify(err)
-			);
-
+			return next({ log: err, message: 'Something went wrong.'});
 		// store retrieved users into res.locals and move on to next middleware
 		res.locals.users = users;
 		return next();
@@ -25,12 +23,32 @@ userController.getAllUsers = (req, res, next) => {
  * createUser - create and save a new User into the database.
  */
 userController.createUser = async (req, res, next) => {
-	// write code here
 	try {
-		await User.create(req.body);
-		return next();
-	} catch {
-		return next({ error: 'User not created' });
+		const found = await User.findOne({ username: req.body.username });
+		if (!found) {
+			const newUser = await User.create(req.body);
+			console.log("Created user:", newUser);
+			if (newUser._id) {
+				const { username, password } = req.body;
+				const ssid = newUser._id.toString();
+				res.locals.ssid = ssid;
+
+				const text = "INSERT INTO users (username, password, ssid) VALUES ($1, $2, $3)"
+				const values = [username, password, ssid];
+				db.query(text, values)
+        .then((data) => {
+						console.log("SQL result", data)
+            return next();
+        })
+				.catch(err => next({log: err, message: "Something went wrong."}))
+			} else {
+				return next({log: newUser, message: "An error occurred."});
+			}
+		} else {
+			return next({ log: `User already exists:\n${found}`, message: 'User already exists'});
+		}
+	} catch (error) {
+		return next({ log: error,  message: 'User not created'});
 	}
 };
 
@@ -42,20 +60,19 @@ userController.createUser = async (req, res, next) => {
 userController.verifyUser = async (req, res, next) => {
 	console.log(req.body);
 	try {
-		
 		const foundUser = await User.findOne({ username: req.body.username })
 		res.locals.verified = false;
+		if (!foundUser) return next({ log: 'User not found.', message: 'Could not verify username or password.'});
 		
 		if (req.body.password === foundUser.password) {
-			// console.log('Succesful password comparison');
 			res.locals.verified = true;
 			res.locals.ssid = foundUser._id.toString();
 			return next();
 		} else {
-			return res.redirect('/');
+			return next({ log: 'User password incorrect.', message: 'Could not verify username or password.'});
 		}
-	} catch {
-		return next({ error: 'Find user request failed!' })
+	} catch (error) {
+		return next({ log: error, message: 'Could not verify username or password.' })
 	}
 };
 

@@ -20,11 +20,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Login route
-app.use('/login', userController.verifyUser, cookieController.setSSIDCookie, sessionController.startSession, (req, res) => {
-    // what should happen here on successful log in?
+// Login and logout routes
+app.post('/login', userController.verifyUser, cookieController.setSSIDCookie, sessionController.startSession, (req, res) => {
     console.log('Successful login, loading page')
-    res.status(200).send('Logging in...');
+    return res.redirect('/checkloginstatus');
+});
+
+app.use('/checkloginstatus', sessionController.isLoggedIn, (req, res) => {
+    if (res.locals.loggedIn) res.status(200).json({ loggedIn: true });
+    else res.status(400).json({ loggedIn: false });
+})
+
+app.get('/logout', sessionController.endSession, (req, res) => {
+    console.log('Successful logout, unloading components')
+    res.status(200).json({ loggedIn: false });
+});
+
+// Signup route
+app.post('/signup', userController.createUser, userController.verifyUser, cookieController.setSSIDCookie, sessionController.startSession, (req, res) => {
+	// create and store a user in our db
+	console.log('Succesful signup, loading page');
+	return res.redirect('/checkloginstatus');
 });
 
 // Routing for API calls
@@ -46,7 +62,7 @@ app.use('/', (req, res) => {
 const defaultErr = {
     log: 'A middleware error occurred',
     status: 400,
-    message: { err: 'An error occurred' },
+    message: 'An error occurred',
 }
 
 app.use((err, req, res, next) => {
