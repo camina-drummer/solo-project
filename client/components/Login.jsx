@@ -5,7 +5,23 @@ class Login extends Component {
     super(props);
   }
 
+  clearFields(event) {
+    event.preventDefault();
+    document.getElementById('usernameLI').value = "";
+    document.getElementById('passwordLI').value = "";
+  }
+
+  loginReq() {
+    fetch('/login')
+    .then(data => data.json())
+    .then(parsed => {
+      console.log(parsed);
+    })
+    .catch(err => console.log(err));
+  }
+
   render() {
+  
     return (
       <div className="flex-container">
         <form id="loginForm">
@@ -15,8 +31,8 @@ class Login extends Component {
           <label htmlFor="passwordField">Password: </label>
           <input type="text" class="passwordField" id="passwordLI" name="passwordField"></input>
           <div className="flex-container">
-            <button className="loginbtn" type="button" onClick={this.props.loginFn}>Login</button>
-            <button className="loginbtn" type="button">Clear</button>
+            <button className="loginbtn" type="button" onClick={this.loginReq}>Login</button>
+            <button className="loginbtn" type="button" onClick={this.clearFields}>Clear</button>
           </div>
           <div className="flex-container linkContainer">
             <p className="linkTxt">Don't have an account?</p>

@@ -167,3 +167,10 @@ h1 {
 .linkContainer {
     margin-top: 20px;
 }
+
+#logoutBtn,
+#guestBtn {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+}

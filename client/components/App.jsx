@@ -29,6 +29,7 @@ class App extends Component {
     this.handleClickSQL = this.handleClickSQL.bind(this);
     this.loginFn = this.loginFn.bind(this);
     this.signupPage = this.signupPage.bind(this);
+    this.logoutFn = this.logoutFn.bind(this);
   }
 
   componentDidMount() {
@@ -83,6 +84,10 @@ class App extends Component {
     this.setState({ loggedIn: true });
   }
 
+  logoutFn() {
+    this.setState({ loggedIn: false });
+  }
+
   signupPage() {
     this.setState({ signupPage: !this.state.signupPage });
   }
@@ -98,14 +103,18 @@ class App extends Component {
 
     if (!this.state.loggedIn) {
       return (
-        <div id="loginDiv">
-          <Login signupPage={this.signupPage} loginFn={this.loginFn} />
+        <div>
+          <button onClick={this.loginFn} className="loginbtn" id="guestBtn" type="button">Guest Mode</button>
+          <div id="loginDiv">
+            <Login signupPage={this.signupPage} loginFn={this.loginFn} />
+          </div>
         </div>
       )
     }
 
     return (
       <div>
+        <button onClick={this.logoutFn} className="loginbtn" id="logoutBtn" type="button">Logout</button>
         <Images />       
         <Stories traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
         <br></br>

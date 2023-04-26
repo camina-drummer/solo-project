@@ -16,9 +16,4 @@ router.use('/sql', apiController.dbQuery, (req, res, next) => {
     res.status(200).json(res.locals.sqlResults);
 });
 
-// router.use('/', apiController.dbQuery, (req, res) => {
-//     console.log("hit SQL router")
-//     res.status(200).json(res.locals.sqlResults);
-// });
-
 module.exports = router;
