@@ -12,20 +12,18 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-console.log('Entering server.js file');
-
 // Routing for API calls
 app.use('/api', apiRouter);
 
+app.use('/build', () => {
+    res.status(200).sendFile(path.join(__dirname, '../build'));
+});
 // Default routes
 app.use('/', (req, res) => {
     console.log('Hit end of / route, serving index.html');
     res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-app.use('/build', () => {
-    res.status(200).sendFile(path.join(__dirname, '../build'));
-});
 
 // Global error handler
 const defaultErr = {

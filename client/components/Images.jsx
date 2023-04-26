@@ -7,8 +7,9 @@ class Images extends Component {
 
   render() {
     return (
-      <div>
-        <p>Images</p>
+      <div className='flex-container'>
+        <image src="./client/assets/placeholder.jpg"></image>
+        <p>Images will be displayed here.</p>
       </div>
     );
   }

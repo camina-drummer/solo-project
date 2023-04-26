@@ -4,15 +4,21 @@ const router = express.Router();
 // Require in relevant controllers
 const apiController = require('../controllers/apiController.js')
 
-// // Testing for DB queries, fill in other middleware
-// router.get('/', apiController.cgptStoryQuery, apiController.dbQuery, (req, res) => {
-//     console.log('Hit / get router in api.js');
-//     console.log(res.locals.records);
-//     res.status(200).json(res.locals.records);
-// });
-
-router.use('/', apiController.cgptQuery, (req, res) => {
+// CGPT queries
+router.use('/cgpt', apiController.cgptQuery, (req, res) => {
+    console.log("hit CGPT router")
     res.status(200).json(res.locals.cgptResults);
 });
+
+// SQL queries
+router.use('/sql', apiController.dbQuery, (req, res) => {
+    console.log("hit SQL router")
+    res.status(200).json(res.locals.sqlResults);
+});
+
+// router.use('/', apiController.dbQuery, (req, res) => {
+//     console.log("hit SQL router")
+//     res.status(200).json(res.locals.sqlResults);
+// });
 
 module.exports = router;

@@ -3,18 +3,17 @@ require('dotenv').config();
 
 const apiController = {};
 
-// apiController.dbQuery = (req, res, next) => {
-//     const { query } = res.locals;
-//     db.query(query)
-//         .then((data) => {
-//             // console.log(data);
-//             res.locals.records = data.rows;
-//             return next();
-//         })
-//         .catch((err) => {
-//             return next(err);
-//         });
-// };
+apiController.dbQuery = (req, res, next) => {
+    const { query } = req.body;
+    db.query(query)
+        .then((data) => {
+            res.locals.sqlResults = data.rows;
+            return next();
+        })
+        .catch((err) => {
+            return next(err);
+        });
+};
 
 apiController.cgptQuery = (req, res, next) => {
     // Create CGPT query
@@ -23,7 +22,7 @@ apiController.cgptQuery = (req, res, next) => {
     // Create JSON query object
     const apiQuery = JSON.stringify({
             model: "gpt-3.5-turbo",
-            messages: [{role: "user", content: req.body.query}]
+            messages: [{role: "user", content: query}]
           });
     console.log(apiQuery);
     // Create authorization string

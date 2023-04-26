@@ -37,6 +37,7 @@ module.exports = {
     ]
   },
   devServer: {
+    // historyApiFallback: true,
     // anything thats not available in the output, used for serving up static assets
     // static: {
     //   publicPath: 'build',
@@ -44,7 +45,8 @@ module.exports = {
     // }
     port: 8080,
     proxy : {
-      '/' : 'http://localhost:3000/',
+      '/api' : 'http://localhost:3000/',
+      // secure: false,
       // '/api' : {
       //   target: 'http://localhost:8080',
       //   router: () => 'http://localhost:3000',
