@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Images from './Images.jsx';
 
 class Stories extends Component {
     constructor(props) {
@@ -42,11 +43,21 @@ class Stories extends Component {
                 <div className="story-container flex-container"><p id="cgptresponsetext">{el.message.content}</p></div>
             );
           });
-        const savebutton = [];
+
+        const optionalbuttons = [];
         if (this.props.stories[0].message.content !== "What kind of character do you want a backstory for?")
         {
-            savebutton.push(<button type="button" className="form-button" id="saveStoryMain" onClick={() => this.props.savetodb()}>Save Story</button>)
+            optionalbuttons.push(<button type="button" className="form-button" id="saveStoryMain" onClick={() => this.props.savetodb()}>Save Story</button>);
+            optionalbuttons.push(<button type="button" className="form-button" id="requestimagebutton" onClick={() => this.props.requestimage()}>Create Image</button>);
         }
+       
+        // Save image button
+        // if (this.props.images.length) {
+        //     if (this.props.images[0].url) {
+        //         optionalbuttons.push(<button type="button" className="form-button" id="saveimagebutton" onClick={() => this.props.saveimage()}>Save Image</button>);
+        //     }
+        // } 
+        
 
         // Create closure function for story selector
         function storySelector() {
@@ -94,11 +105,12 @@ class Stories extends Component {
           
         return (
             <div>
+                <Images images={this.props.images} />
                 <div className="flex-container">
                     {stories}
                 </div>
                 <div className="flex-container">
-                    {savebutton}
+                    {optionalbuttons}
                 </div>
                 <form className="flex-container">
                     <label htmlFor="mainField">Make me a back story for a: </label>

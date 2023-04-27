@@ -27,4 +27,10 @@ router.get('/load', apiController.dbLoad, (req, res) => {
     res.status(200).json(res.locals.sqlSelectResults);
 });
 
+// Image routers
+router.post('/image/load', apiController.dalleQuery, (req, res) => {
+    console.log("Hit end of DALLE load router");
+    res.status(200).json(res.locals.dalleResults);
+});
+
 module.exports = router;

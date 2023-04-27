@@ -54,14 +54,14 @@ apiController.dbLoad = (req, res, next) => {
 
 apiController.cgptQuery = (req, res, next) => {
     // Create CGPT query
-    const query = `Make me a dungeons and dragons character backstory for a ${req.body.query}. Keep your response under 150 words.`
+    const query = `Make me a dungeons and dragons character backstory for a ${req.body.query}. Keep your response under 950 characters.`
 
     // Create JSON query object
     const apiQuery = JSON.stringify({
             model: "gpt-3.5-turbo",
             messages: [{role: "user", content: query}]
           });
-    console.log(apiQuery);
+    // console.log(apiQuery);
     // Create authorization string
     const authString = `Bearer ${process.env.CGPT_TOKEN}`;
     // Create CGPT API fetch request using query object and authorization string
@@ -81,5 +81,36 @@ apiController.cgptQuery = (req, res, next) => {
         })
         .catch((err) => next(err));
 }; 
+
+apiController.dalleQuery = (req, res, next) => {
+    // Create DALLE query
+    const query = "Oil painting of this fantasy character: ".concat("", req.body.query);
+    console.log(query);
+    // Create authorization string
+    const authString = `Bearer ${process.env.CGPT_TOKEN}`;
+    // Create JSON query object
+    const apiQuery = JSON.stringify({
+        "prompt": query,
+        "n": 1,
+        "size": "1024x1024"
+      });
+    // Make fetch request
+    fetch('https://api.openai.com/v1/images/generations', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": authString
+        },
+        body: apiQuery
+    })
+    .then((data) => data.json())
+    .then((parsed) => {
+        res.locals.dalleResults = parsed.data;
+        console.log(res.locals.dalleResults);
+        return next();
+    })
+    .catch((err) => next({ log: err, message: "Error generating image."}));
+}
+
 
 module.exports = apiController;

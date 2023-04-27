@@ -186,6 +186,13 @@ h1 {
     width: 80vw;
 }
 
-#saveStoryMain {
+#saveStoryMain,
+#requestimagebutton {
     margin: -10px 0px 10px 0px;
+}
+
+.charimage {
+    height: auto;
+    max-width: 300px;
+    border: 2px solid #655b55;
 }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Stories from './Stories.jsx';
-import Images from './Images.jsx';
 import Database from './Database.jsx';
 import Login from './Login.jsx';
 import Signup from './Signup.jsx';
@@ -34,6 +33,7 @@ class App extends Component {
     this.guestLogin = this.guestLogin.bind(this);
     this.saveToDb = this.saveToDb.bind(this);
     this.loadFromDb = this.loadFromDb.bind(this);
+    this.requestImage = this.requestImage.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +45,7 @@ class App extends Component {
   }
 
   handleClickCGPT() {
+    window.alert("Generating backstory...");
     fetch('/api/cgpt', {
       method: "POST",
       headers: {
@@ -58,7 +59,7 @@ class App extends Component {
       .then((parsed) => {
         this.setState({ stories: parsed });
         console.log(this.state.stories);
-        window.alert("Success!");
+        window.alert("Backstory generated!");
       })
       .catch((err) => {
         window.alert("Error!");
@@ -218,6 +219,29 @@ class App extends Component {
     this.setState({ signupPage: !this.state.signupPage });
   }
 
+  requestImage() {
+    window.alert("Generating image...");
+    fetch('/api/image/load', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query: document.getElementById('cgptresponsetext').innerText,
+      })
+    })
+    .then((data) => data.json())
+    .then((parsed) => {
+      console.log(parsed);
+      window.alert("Image generated!");
+      this.setState({ images: parsed });
+    })
+    .catch((err) => {
+      console.log(err);
+      window.alert("Error generating image!")
+    })
+  }
+
   render() {
     if (this.state.signupPage === true) {
       return (
@@ -242,8 +266,7 @@ class App extends Component {
       return (
         <div>
           <button onClick={this.logoutFn} className="loginbtn" id="logoutBtn" type="button">Logout</button>
-          {/* <Images />     */}
-          <Stories savetodb={this.saveToDb} traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
+          <Stories images={this.state.images} requestimage={this.requestImage} savetodb={this.saveToDb} traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
           <br></br>
           <br></br>
           <br></br>
