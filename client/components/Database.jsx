@@ -17,11 +17,11 @@ class Database extends Component {
   }
 
   render() {
-    const stories = this.props.dbstories.map((el, index) => {
+    const stories = this.props.dbstories.map((obj, index) => {
       return (
         <div>
           <div className="flex-container dbStoryTitle">{`Entry #${index + 1}`}</div>
-          <div className="flex-container dbStoryText">{JSON.stringify(el)}</div>
+          <div className="flex-container dbStoryText">{obj.story}</div>
         </div>
       )
     });
@@ -33,6 +33,7 @@ class Database extends Component {
           <input type="text" id="dbField" name="dbField" onKeyDown={(e) => this.onEnter(e)}/>
           <button type="button" className="form-button" id="test" onClick={() => this.props.submitquery()}>Submit Query</button>
           <button type="button" className="form-button" id="clearField" onClick={() => this.clearField()}>Clear</button>
+          <button type="button" className="form-button" id="loadfromdb" onClick={() => this.props.loadfromdb()}>Load Stories</button>
         </form>
         <div className="flex-container"> 
           <div>

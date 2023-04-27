@@ -39,9 +39,14 @@ class Stories extends Component {
         // Create stories string array from query response object
         const stories = this.props.stories.map((el) => {
             return (
-                <div className="story-container flex-container"><p>{el.message.content}</p></div>
+                <div className="story-container flex-container"><p id="cgptresponsetext">{el.message.content}</p></div>
             );
           });
+        const savebutton = [];
+        if (this.props.stories[0].message.content !== "Please submit a query.")
+        {
+            savebutton.push(<button type="button" className="form-button" id="saveStoryMain" onClick={() => this.props.savetodb()}>Save Story</button>)
+        }
 
         // Create closure function for story selector
         function storySelector() {
@@ -91,6 +96,9 @@ class Stories extends Component {
             <div>
                 <div className="flex-container">
                     {stories}
+                </div>
+                <div className="flex-container">
+                    {savebutton}
                 </div>
                 <form className="flex-container">
                     <label htmlFor="mainField">Make me a back story for a: </label>

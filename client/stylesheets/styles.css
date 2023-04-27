@@ -182,4 +182,9 @@ h1 {
 
 .dbStoryText {
     margin: 10px;
+    width: 80vw;
+}
+
+#saveStoryMain {
+    margin: -10px 0px 10px 0px;
 }

@@ -46,6 +46,7 @@ app.post('/signup', userController.createUser, userController.verifyUser, cookie
 // Routing for API calls
 app.use('/api', apiRouter);
 
+// Routing for local webpack bundles
 app.use('/build', () => {
     res.status(200).sendFile(path.join(__dirname, '../build'));
 });

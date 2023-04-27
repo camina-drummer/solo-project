@@ -19,7 +19,7 @@ class App extends Component {
         role: ["barbarian", "bard", "cleric", "druid", "fighter", "monk", "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard"],
         home: ["a big city", "a coastal village", "a rural town", "a cave", "the desert", "the forest", "the jungle", "the mountains"]
       },
-      dbstories: [],
+      dbstories: [{ story: "Saved stories loaded here."}],
       dbimages: [],
       loggedIn: null,
       signupPage: false,
@@ -32,6 +32,8 @@ class App extends Component {
     this.logoutFn = this.logoutFn.bind(this);
     this.loginReq = this.loginReq.bind(this);
     this.guestLogin = this.guestLogin.bind(this);
+    this.saveToDb = this.saveToDb.bind(this);
+    this.loadFromDb = this.loadFromDb.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +66,46 @@ class App extends Component {
       });
   }
 
+  saveToDb() {
+    // Post request sending current story in request body
+    fetch('/api/save', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query: document.getElementById('cgptresponsetext').innerText,
+      })
+    })
+    .then((data) => data.json())
+    .then((parsed) => {
+      console.log(parsed);
+      window.alert("Saved to database!");
+    })
+    .catch((err) => {
+      console.log(err);
+      window.alert("Error saving to database!")
+    })
+  }
+
+  loadFromDb() {
+    fetch('/api/load')
+    .then((data) => data.json())
+    .then((parsed) => {
+      console.log(parsed);
+      if (parsed.length && parsed[0].story) {
+        window.alert("Loaded from database!");
+        this.setState({ dbstories: parsed});
+      } else {
+        window.alert("No saved stories found in database.")
+      }
+    })
+    .catch((err) => {
+      console.log(error);
+      window.alert("Error loading from database!")
+    })
+  }
+
   handleClickSQL() {
     fetch('/api/sql', {
       method: "POST",
@@ -76,8 +118,13 @@ class App extends Component {
     })
       .then((data) => data.json())
       .then((parsed) => {
+        const newdbstories = parsed.map((obj) => {
+          return (
+            { story: JSON.stringify(obj) }
+          )
+        });
         this.setState({
-          dbstories: parsed
+          dbstories: newdbstories
         });
         window.alert("Success!");
       })
@@ -87,12 +134,17 @@ class App extends Component {
       });
   }
 
-  // Probably don't need
+  // Probably don't need it
   loginFn() {
     this.setState({ loggedIn: true });
   }
 
-  loginReq() {
+  loginReq(event = null) {
+    // if (event) {
+    //   if (event.keyCode === 13) {
+    //     event.preventDefault();
+    //   }
+    // }
     fetch('/login', {
       method: "POST",
       headers: {
@@ -188,11 +240,12 @@ class App extends Component {
         <div>
           <button onClick={this.logoutFn} className="loginbtn" id="logoutBtn" type="button">Logout</button>
           {/* <Images />     */}
-          <Stories traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
+          <Stories savetodb={this.saveToDb} traits={this.state.traits} stories={this.state.stories} submitquery={this.handleClickCGPT} />
           <br></br>
           <br></br>
           <br></br>
-          <Database dbstories={this.state.dbstories} dbimages={this.state.dbimages} submitquery={this.handleClickSQL}/>
+          <br></br>
+          <Database loadfromdb={this.loadFromDb} dbstories={this.state.dbstories} dbimages={this.state.dbimages} submitquery={this.handleClickSQL}/>
         </div>
       )
     }
