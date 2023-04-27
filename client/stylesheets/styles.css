@@ -27,6 +27,7 @@ h1 {
     height: fit-content;
     display: flex;
     justify-content: center;
+    margin-bottom: 50px;
 }
 
 .form-button {
