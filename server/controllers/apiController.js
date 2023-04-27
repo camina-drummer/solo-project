@@ -25,16 +25,33 @@ apiController.dbSave = (req, res, next) => {
         const user_id = data.rows[0]._id;
         const story = req.body.query;
 
-        const insertQuery = "INSERT INTO stories (user_id, story) VALUES ($1, $2)"
+        const insertQuery = "INSERT INTO stories (user_id, story) VALUES ($1, $2) RETURNING *;"
         const insertValues = [user_id, story];
 
         db.query(insertQuery, insertValues)
             .then((data) => {
-                // console.log("Returned save query data: ", data);
+                console.log("Returned save query data 1: ", data.rows[0]._id);
                 res.locals.sqlInsertResults = data.rowCount;
-                return next();
+
+                if (Object.hasOwn(req.body, "imageUrl") && data.rows[0]._id) {   
+                    console.log("Entering image save if statement");
+                    const insertImageQuery = "INSERT INTO images (story_id, image) VALUES ($1, $2) RETURNING *;";
+                    const story_id = data.rows[0]._id;
+                    const image = `${req.body.imageUrl}`;
+                    const insertImageValues = [story_id, image];
+                    console.log(insertImageValues);
+                    console.log(JSON.stringify(image));
+                    db.query(insertImageQuery, insertImageValues)
+                    .then((data) => {
+                        console.log("Logging image insert response: ", data);
+                        return next();
+                    })
+                    .catch((err) => next({ log: err, message: "Could not save image."}))
+                } else {
+                    return next();
+                }
             })
-            .catch((err) => next({log: err, message: "Could not save."}));
+            .catch((err) => next({log: err, message: "Could not save story."}));
     })
     .catch((err) => next({log: err, message: "Could not save."}));
 };
@@ -54,7 +71,7 @@ apiController.dbLoad = (req, res, next) => {
 
 apiController.cgptQuery = (req, res, next) => {
     // Create CGPT query
-    const query = `Make me a dungeons and dragons character backstory for a ${req.body.query}. Keep your response under 950 characters.`
+    const query = `Keep the length of your response under 900 characters. Make me a dungeons and dragons character backstory for a ${req.body.query}.`
 
     // Create JSON query object
     const apiQuery = JSON.stringify({
@@ -84,7 +101,7 @@ apiController.cgptQuery = (req, res, next) => {
 
 apiController.dalleQuery = (req, res, next) => {
     // Create DALLE query
-    const query = "Oil painting of this fantasy character: ".concat("", req.body.query);
+    const query = "Oil painting of this fantasy character: ".concat("", req.body.query).slice(0, 900);
     console.log(query);
     // Create authorization string
     const authString = `Bearer ${process.env.CGPT_TOKEN}`;
@@ -105,6 +122,7 @@ apiController.dalleQuery = (req, res, next) => {
     })
     .then((data) => data.json())
     .then((parsed) => {
+        console.log(parsed);
         res.locals.dalleResults = parsed.data;
         console.log(res.locals.dalleResults);
         return next();

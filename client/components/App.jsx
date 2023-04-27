@@ -68,15 +68,25 @@ class App extends Component {
   }
 
   saveToDb() {
+    // Create request body
+    const body = {
+      query: document.getElementById('cgptresponsetext').innerText
+    };
+    // Check if image has been generated
+    if (document.getElementById('image1')) {
+      // Add image prop to body
+      body.imageUrl = document.getElementById('image1').attributes.src.textContent;
+      // body.imageUrl = document.getElementsByClassName('charimage')[0].attributes.src.textContent;
+    }
+    // Convert body to JSON
+    const stringBody = JSON.stringify(body);
     // Post request sending current story in request body
     fetch('/api/save', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        query: document.getElementById('cgptresponsetext').innerText
-      })
+      body: stringBody
     })
     .then((data) => data.json())
     .then((parsed) => {
@@ -182,7 +192,8 @@ class App extends Component {
     .then(parsed => {
       const stories = [ { message: { content: "What kind of character do you want a backstory for?" } } ];
       const dbstories = [];
-      const newState = Object.assign(parsed, { stories, dbstories });
+      const images = [];
+      const newState = Object.assign(parsed, { stories, dbstories, images });
       this.setState(newState);
       window.alert("Logging you out.")
     })
