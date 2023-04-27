@@ -75,7 +75,7 @@ class App extends Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        query: document.getElementById('cgptresponsetext').innerText,
+        query: document.getElementById('cgptresponsetext').innerText
       })
     })
     .then((data) => data.json())
