@@ -54,7 +54,7 @@ apiController.dbLoad = (req, res, next) => {
 
 apiController.cgptQuery = (req, res, next) => {
     // Create CGPT query
-    const query = `${req.body.query}. Keep your response under 150 words.`
+    const query = `Make me a dungeons and dragons character backstory for a ${req.body.query}. Keep your response under 150 words.`
 
     // Create JSON query object
     const apiQuery = JSON.stringify({

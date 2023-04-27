@@ -43,7 +43,7 @@ class Stories extends Component {
             );
           });
         const savebutton = [];
-        if (this.props.stories[0].message.content !== "Please submit a query.")
+        if (this.props.stories[0].message.content !== "What kind of character do you want a backstory for?")
         {
             savebutton.push(<button type="button" className="form-button" id="saveStoryMain" onClick={() => this.props.savetodb()}>Save Story</button>)
         }

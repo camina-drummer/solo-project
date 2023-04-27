@@ -18,9 +18,9 @@ class Login extends Component {
         <form id="loginForm">
           <p className="formHeader">Login</p>
           <label htmlFor="usernameField">Username: </label>
-          <input type="text" className="usernameField" id="usernameLI" name="usernameField"></input>
+          <input type="text" className="usernameField" id="usernameLI" name="usernameField" onKeyDown={this.props.loginReq}></input>
           <label htmlFor="passwordField">Password: </label>
-          <input type="text" className="passwordField" id="passwordLI" name="passwordField"></input>
+          <input type="text" className="passwordField" id="passwordLI" name="passwordField" onKeyDown={this.props.loginReq}></input>
           <div className="flex-container">
             <button className="loginbtn" type="button" onClick={this.props.loginReq}>Login</button>
             <button className="loginbtn" type="button" onClick={this.clearFields}>Clear</button>

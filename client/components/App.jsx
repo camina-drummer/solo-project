@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stories: [ { message: { content: "Please submit a query." } } ],
+      stories: [ { message: { content: "What kind of character do you want a backstory for?" } } ],
       images: [],
       traits: {
         gender: ["male", "female", "trans male", "trans female", "non-binary", "gender neutral"],
@@ -19,7 +19,7 @@ class App extends Component {
         role: ["barbarian", "bard", "cleric", "druid", "fighter", "monk", "paladin", "ranger", "rogue", "sorcerer", "warlock", "wizard"],
         home: ["a big city", "a coastal village", "a rural town", "a cave", "the desert", "the forest", "the jungle", "the mountains"]
       },
-      dbstories: [{ story: "Saved stories loaded here."}],
+      dbstories: [],
       dbimages: [],
       loggedIn: null,
       signupPage: false,
@@ -140,11 +140,13 @@ class App extends Component {
   }
 
   loginReq(event = null) {
-    // if (event) {
-    //   if (event.keyCode === 13) {
-    //     event.preventDefault();
-    //   }
-    // }
+    if (event.keyCode) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+      } else {
+        return;
+      }
+    }
     fetch('/login', {
       method: "POST",
       headers: {
@@ -177,10 +179,11 @@ class App extends Component {
     })
     .then(data => data.json())
     .then(parsed => {
-      const stories = [ { message: { content: "Please submit a query." } } ];
-      const dbstories = ["Please submit a query."];
+      const stories = [ { message: { content: "What kind of character do you want a backstory for?" } } ];
+      const dbstories = [];
       const newState = Object.assign(parsed, { stories, dbstories });
       this.setState(newState);
+      window.alert("Logging you out.")
     })
     .catch(err => {
       console.log(err);

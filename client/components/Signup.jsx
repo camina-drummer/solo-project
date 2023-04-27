@@ -13,7 +13,14 @@ class Signup extends Component {
 
   
 
-  signupReq(signUpPageToggle, loginPageToggle) {
+  signupReq(event, signUpPageToggle, loginPageToggle) {
+    if (event.keyCode) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+      } else {
+        return;
+      }
+    }
     const username = document.getElementById('usernameSU').value;
     const password = document.getElementById('passwordSU').value;
     fetch('/signup', {
@@ -46,11 +53,11 @@ class Signup extends Component {
         <form id="signupForm">
           <p className="formHeader">Signup</p>
           <label htmlFor="usernameField">Username: </label>
-          <input type="text" className="usernameField" id="usernameSU" name="usernameField"></input>
+          <input type="text" className="usernameField" id="usernameSU" name="usernameField" onKeyDown={(e) => this.signupReq(e, this.props.signupPage, this.props.loginFn)}></input>
           <label htmlFor="passwordField">Password: </label>
-          <input type="text" className="passwordField" id="passwordSU" name="passwordField"></input>
+          <input type="text" className="passwordField" id="passwordSU" name="passwordField" onKeyDown={(e) => this.signupReq(e, this.props.signupPage, this.props.loginFn)}></input>
           <div className="flex-container">
-            <button className="loginbtn" type="button" onClick={() => this.signupReq(this.props.signupPage, this.props.loginFn)}>Signup</button>
+            <button className="loginbtn" type="button" onClick={(e) => this.signupReq(e, this.props.signupPage, this.props.loginFn)}>Signup</button>
             <button className="loginbtn" type="button" onClick={this.clearFields}>Clear</button>
           </div>
           <div className="flex-container linkContainer">
