@@ -22,7 +22,8 @@ CREATE TABLE public.users (
 	"username" varchar NOT NULL,
   "password" varchar NOT NULL,
 	"ssid" varchar NOT NULL,
-	CONSTRAINT "users_pk" PRIMARY KEY ("_id")
+	CONSTRAINT "users_pk" PRIMARY KEY ("_id") 
+	ON DELETE CASCADE
 ) WITH (
   OIDS=FALSE
 );
@@ -32,6 +33,7 @@ CREATE TABLE public.stories (
 	"user_id" bigint NOT NULL,
 	"story" varchar NOT NULL,
 	CONSTRAINT "stories_pk" PRIMARY KEY ("_id")
+	ON DELETE CASCADE
 ) WITH (
   OIDS=FALSE
 );
@@ -56,6 +58,7 @@ CREATE TABLE public.images (
 	"story_id" bigint NOT NULL,
 	"image" varchar NOT NULL,
 	CONSTRAINT "images_pk" PRIMARY KEY ("_id")
+	ON DELETE CASCADE
 ) WITH (
   OIDS=FALSE
 );
