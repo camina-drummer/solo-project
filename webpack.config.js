@@ -39,6 +39,7 @@ module.exports = {
   },
   devServer: {
     // historyApiFallback: true, // doesn't seem to do anything
+    
     // anything thats not available in the output, used for serving up static assets
     // static: {
     //   publicPath: 'build',

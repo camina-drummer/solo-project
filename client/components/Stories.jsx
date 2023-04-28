@@ -82,12 +82,12 @@ class Stories extends Component {
         }
 
         const dropdownFn = storySelector();
-            
+        
+        // Dropdown template: https://www.w3schools.com/howto/howto_css_dropdown.asp
         const dropdowns = [];
-        let trait;
 
         for (const key in this.props.traits) {
-            trait = [];
+            let trait = [];
             this.props.traits[key].forEach((el) => {
                 trait.push(
                     <button type="button" btnparent={key} onClick={dropdownFn} className="dropdown-option">{el}</button>
